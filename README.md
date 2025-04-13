@@ -1,3 +1,9 @@
+# TO RUN
+```shell
+streamlit run home.py
+```
+NOTE: Ensure that streamlit is installed as a python library and you are utilizing Python 3.11
+
 # ClimateDataChat
 Intelligent Chatbot for Climate Data Recommendation
 
