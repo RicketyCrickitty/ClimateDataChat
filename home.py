@@ -37,6 +37,8 @@ class InMemoryChatGPTManager:
             "* or data science best practices,\n"
             "and that you are providing a helpful response.\n\n"
             "If the user asks you to do something outside of those topics, you should refuse.\n"
+            "Ask the user questions to learn more about their climate data use case so you can find the best data for them.\n"
+            "Provide links to the user to datasets relevant to their use case.\n"
         )
         
         # Maximum conversation messages to keep (excluding the system prompt)
