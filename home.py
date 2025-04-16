@@ -1,7 +1,11 @@
 ## IMPORT START ##
 import streamlit as st
 import asyncio
+from openai import OpenAI
 ## IMPORT END ##
+
+API_KEY = '<KEY>'
+client = OpenAI()
 
 def show_sidebar() -> None:
     with st.sidebar:
@@ -25,6 +29,19 @@ st.set_page_config(
     page_icon="🌏🤖",
     layout="wide"
 )
+
+
+def chat_interaction(user_input: str) -> str:
+    """
+    This function allows the user to interact with our open ai client.
+    :param user_input: what the user types and enters into the chat box.
+    :return: the client's response.
+    """
+    response = client.responses.create(
+        model="gpt-4.1",
+        input=user_input)
+
+    return response.text
 
 
 show_sidebar()
@@ -70,4 +87,7 @@ if prompt := st.chat_input("Ask a software development or coding question..."):
         # TODO: Run chat function with LLM -> Make sure to append output to st.session_state.messages
         # asyncio.run(util.chat(st.session_state.messages, prompt))
         # st.rerun()
+        print(chat_interaction(prompt))
+
+
 
