@@ -4,6 +4,10 @@ streamlit run home.py
 ```
 NOTE: Ensure that streamlit is installed as a python library and you are utilizing Python 3.11
 
+```
+Copy config_sample.py and name the copy config.py. Import your API keys in there.
+```
+
 # ClimateDataChat
 Intelligent Chatbot for Climate Data Recommendation
 
