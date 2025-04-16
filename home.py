@@ -2,10 +2,11 @@
 import streamlit as st
 import asyncio
 from openai import OpenAI
+from openai import Client
+from config import Config
 ## IMPORT END ##
 
-API_KEY = '<KEY>'
-client = OpenAI()
+client = OpenAI(api_key=Config.OPENAI_API_KEY)
 
 def show_sidebar() -> None:
     with st.sidebar:
@@ -37,11 +38,21 @@ def chat_interaction(user_input: str) -> str:
     :param user_input: what the user types and enters into the chat box.
     :return: the client's response.
     """
-    response = client.responses.create(
-        model="gpt-4.1",
-        input=user_input)
+    response = client.chat.completions.create(
+        model=Config.OPENAI_MODEL,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_input}
+        ],
+        max_tokens=150,
+        temperature=0.5,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0.6)
+    
+    ai_response = response.choices[0].message.content.strip()
 
-    return response.text
+    return ai_response
 
 
 show_sidebar()
@@ -72,9 +83,9 @@ system_prompt = """
 
 # Ensure the session state is initialized
 if "messages" not in st.session_state:
-    initial_messages = [{"role": "system",
-                         "content": system_prompt}]
-    st.session_state.messages = initial_messages
+    st.session_state.messages = [
+         {"role": "system", "content": system_prompt}
+    ]
 
 # Print all messages in the session state
 for message in [m for m in st.session_state.messages if m["role"] != "system"]:
@@ -83,11 +94,15 @@ for message in [m for m in st.session_state.messages if m["role"] != "system"]:
 
 # React to the user prompt
 if prompt := st.chat_input("Ask a software development or coding question..."):
-        print(prompt)
-        # TODO: Run chat function with LLM -> Make sure to append output to st.session_state.messages
-        # asyncio.run(util.chat(st.session_state.messages, prompt))
-        # st.rerun()
-        print(chat_interaction(prompt))
+    #Adds user query to the session state messages
+    st.session_state.messages.append({"role": "user", "content": prompt})
+
+    # Generate and store the model's response
+    response = chat_interaction(prompt)
+    st.session_state.messages.append({"role": "assistant", "content": response})
+
+    #reruns the app for messages to show up
+    st.rerun()
 
 
 
