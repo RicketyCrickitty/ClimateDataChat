@@ -7,8 +7,8 @@ import os
 from kaggle.api.kaggle_api_extended import KaggleApi
 
 # set up kaggle api
-os.environ["KAGGLE_USERNAME"] = st.secrets["kaggle_username"]
-os.environ["KAGGLE_KEY"] = st.secrets["kaggle_key"]
+os.environ["KAGGLE_USERNAME"] = Config.KAGGLE_USER
+os.environ["KAGGLE_KEY"] = Config.KAGGLE_API_KEY
 kaggle_api = KaggleApi()
 kaggle_api.authenticate()
 
@@ -114,8 +114,9 @@ class InMemoryChatGPTManager:
             download_marker = ai_response.find("DOWNLOAD:")
 
             dataset_slug = ai_response[download_marker + 9:].split()[0].strip()
-            print("dataset slug: ", dataset_slug)
-            ai_response = ai_response[download_marker + 9:]
+            # take out the part of the response just meant for backend download info
+            response_index = ai_response.find(dataset_slug) + download_marker + len(dataset_slug)
+            ai_response = ai_response[response_index + 1:]
 
             try:
                 # Download the dataset
