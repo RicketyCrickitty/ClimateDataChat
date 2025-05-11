@@ -1,6 +1,14 @@
 # TO RUN
+
+In a local environment:
 ```shell
 streamlit run home.py
+```
+
+To run inside of a docker container:
+```shell
+docker build -t climatechat
+docker run -p 8501:8501 -v $(pwd):/app climatechat
 ```
 NOTE: Ensure that streamlit is installed as a python library and you are utilizing Python 3.11
 
